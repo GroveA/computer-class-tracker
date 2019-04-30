@@ -10,8 +10,9 @@ import { Computer } from './models/computer.model';
 export class AppComponent {
   title = 'computer-class-tracker';
   public computer: Computer = {
-    name: 'Coputer #1',
+    name: 'Computer #1',
     hostName:  'DESKTOP-NMEV3MP',
+    online: true,
     macAddress: '01.AC.1B.5D',
     ipAddress: '192.168.0.1',
     motherboard: 'asus bh012',

@@ -10,6 +10,7 @@ export interface Computer {
   macAddress: string;
   ipAddress: string;
   motherboard: string;
+  online: boolean;
   cpu: CPU;
   gpu?: GPU;
   hdd?: HDD;

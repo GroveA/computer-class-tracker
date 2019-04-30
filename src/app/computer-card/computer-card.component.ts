@@ -17,4 +17,16 @@ export class ComputerCardComponent implements OnInit {
   ngOnInit() {
   }
 
+
+  getComputerTempeture(): number {
+    return Math.max(
+      this.computer.cpu ? this.computer.cpu.tempeture : 0,
+      this.computer.gpu ? this.computer.gpu.tempeture  : 0,
+      this.computer.hdd ? this.computer.hdd.tempeture : 0
+      );
+  }
+
+  getComputerLoad(): number {
+    return this.computer.cpu.loadTotal;
+  }
 }

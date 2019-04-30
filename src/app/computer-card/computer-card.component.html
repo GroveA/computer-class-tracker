@@ -1,7 +1,7 @@
 <mat-card *ngIf="this.computer">
   <mat-card-header>
     <div mat-card-avatar class="computer-header-image"></div>
-    <mat-card-title>{{ this.computer.name }}</mat-card-title>
+    <mat-card-title><fa-icon [icon]="['fas','circle']" size="xs" [style.color]="this.computer.online ? 'green' : 'red'"></fa-icon>{{ this.computer.name }}</mat-card-title>
     <mat-card-subtitle>{{ this.computer.hostName }}</mat-card-subtitle>
     <span class="spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="computerMenu"><mat-icon>more_vert</mat-icon></button>
@@ -13,15 +13,15 @@
     <p *ngIf="this.computer.ram">RAM: {{ round(this.computer.ram.memoryTotal) }} GB</p>
 
   </mat-card-content>
-  <mat-card-actions>
+  <mat-card-actions *ngIf="this.computer.online">
       <mat-chip-list>
           <mat-chip>
               <fa-icon [icon]="['fas','thermometer-quarter']" size="2x"></fa-icon>
-              {{ this.computer.cpu.tempeture | number: '2.0-1'}}°C
+              {{ getComputerTempeture() | number: '2.0-1'}}°C
           </mat-chip>
           <mat-chip>
               <fa-icon [icon]="['fas','tachometer-alt']" size="2x"></fa-icon>
-              {{ this.computer.cpu.loadTotal | number: '2.0-1' }}%
+              {{ getComputerLoad() | number: '2.0-1' }}%
           </mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>
