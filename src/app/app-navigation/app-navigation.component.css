@@ -1,0 +1,23 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+
+}
+
+.sidenav {
+  border: 0px;
+}
+
+.sidenav *:not(.first-top){
+  background: inherit;
+}
+
+.fixed-header{
+  position: sticky;
+
+  top: 0;
+
+}
