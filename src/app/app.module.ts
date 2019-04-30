@@ -5,24 +5,53 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppNavigationComponent } from './app-navigation/app-navigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
+import {
+  MatToolbarModule,
+  MatButtonModule,
+  MatSidenavModule,
+  MatIconModule,
+  MatListModule,
+  MatChipsModule,
+  MatGridListModule,
+  MatCardModule,
+  MatMenuModule,
+} from '@angular/material';
+
+
+import { ComputerCardComponent } from './computer-card/computer-card.component';
+
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AppNavigationComponent
+    AppNavigationComponent,
+    ComputerCardComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    LayoutModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
     MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatSidenavModule,
+    MatListModule,
+    MatButtonModule,
+    LayoutModule,
+    MatChipsModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    library.add(fas, far);
+  }
+ }

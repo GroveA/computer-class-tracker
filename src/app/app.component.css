@@ -1,1 +1,9 @@
-@import '~@angular/material/prebuilt-themes/purple-green.css';
+
+
+main {
+  padding-left: 1rem;
+}
+
+app-computer-card{
+  margin-left: 5px;
+}

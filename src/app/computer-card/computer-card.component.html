@@ -1,0 +1,42 @@
+<mat-card *ngIf="this.computer">
+  <mat-card-header>
+    <div mat-card-avatar class="computer-header-image"></div>
+    <mat-card-title><fa-icon [icon]="['fas','circle']" size="xs" [style.color]="this.computer.online ? 'green' : 'red'"></fa-icon>{{ this.computer.name }}</mat-card-title>
+    <mat-card-subtitle>{{ this.computer.hostName }}</mat-card-subtitle>
+    <span class="spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="computerMenu"><mat-icon>more_vert</mat-icon></button>
+
+  </mat-card-header>
+  <mat-card-content>
+    <p *ngIf="this.computer.cpu">CPU: {{ this.computer.cpu.name }}</p>
+    <p *ngIf="this.computer.gpu">GPU: {{ this.computer.gpu.name }}</p>
+    <p *ngIf="this.computer.ram">RAM: {{ round(this.computer.ram.memoryTotal) }} GB</p>
+
+  </mat-card-content>
+  <mat-card-actions *ngIf="this.computer.online">
+      <mat-chip-list>
+          <mat-chip>
+              <fa-icon [icon]="['fas','thermometer-quarter']" size="2x"></fa-icon>
+              {{ getComputerTempeture() | number: '2.0-1'}}°C
+          </mat-chip>
+          <mat-chip>
+              <fa-icon [icon]="['fas','tachometer-alt']" size="2x"></fa-icon>
+              {{ getComputerLoad() | number: '2.0-1' }}%
+          </mat-chip>
+      </mat-chip-list>
+    <span class="spacer"></span>
+    <button mat-fab>Details</button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-menu #computerMenu="matMenu">
+    <button mat-menu-item>
+        <fa-icon [icon]="['far','edit']"></fa-icon>
+      <span>Change computer name</span>
+    </button>
+
+    <button mat-menu-item>
+        <fa-icon [icon]="['far','minus-square']"></fa-icon>
+      <span>Remove from group</span>
+    </button>
+  </mat-menu>
