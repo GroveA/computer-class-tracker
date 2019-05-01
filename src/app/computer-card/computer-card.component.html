@@ -1,4 +1,15 @@
 <mat-card *ngIf="this.computer">
+    <mat-menu #computerMenu="matMenu">
+        <button mat-menu-item>
+            <fa-icon [icon]="['far','edit']"></fa-icon>
+          <span>Change computer name</span>
+        </button>
+
+        <button mat-menu-item>
+            <fa-icon [icon]="['far','minus-square']"></fa-icon>
+          <span>Remove from group</span>
+        </button>
+      </mat-menu>
   <mat-card-header>
     <div mat-card-avatar class="computer-header-image"></div>
     <mat-card-title><fa-icon [icon]="['fas','circle']" size="xs" [style.color]="this.computer.online ? 'green' : 'red'"></fa-icon>{{ this.computer.name }}</mat-card-title>
@@ -29,14 +40,4 @@
   </mat-card-actions>
 </mat-card>
 
-<mat-menu #computerMenu="matMenu">
-    <button mat-menu-item>
-        <fa-icon [icon]="['far','edit']"></fa-icon>
-      <span>Change computer name</span>
-    </button>
 
-    <button mat-menu-item>
-        <fa-icon [icon]="['far','minus-square']"></fa-icon>
-      <span>Remove from group</span>
-    </button>
-  </mat-menu>
