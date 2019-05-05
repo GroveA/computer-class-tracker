@@ -63,8 +63,18 @@ app.post('/api/computers', (req, res, next) => {
 });
 
 app.post('/api/computers/:id', (req, res, next) => {
-  console.log(req.body);
-  res.status(200).json({ message: 'All good boro!' + req.params.id });
+  Computer.findById(req.params.id).then(computer => {
+    computer.lastUpdate = Date.parse(req.body.date);
+    computer.tempeture = req.body.update.CPU.TempetureTotal;
+    computer.cpuLoad = req.body.update.CPU.LoadTotal;
+
+    computer.Save().then(save => console.log("Updated computer short info"));
+
+    res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id });
+  }).catch(error => {
+    res.status(400).end("Computer with your id not found :|");
+  })
+
 });
 
 app.get('/api/computers', (req, res, next) => {
