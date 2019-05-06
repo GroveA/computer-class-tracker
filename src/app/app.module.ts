@@ -25,12 +25,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { HttpClientModule } from '@angular/common/http';
+import { ComputerListComponent } from './computer-list/computer-list.component';
+
+import { CountUpModule } from 'countup.js-angular2';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppNavigationComponent,
-    ComputerCardComponent
+    ComputerCardComponent,
+    ComputerListComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +50,9 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     MatButtonModule,
     LayoutModule,
     MatChipsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    HttpClientModule,
+    CountUpModule
   ],
   providers: [],
   bootstrap: [AppComponent]

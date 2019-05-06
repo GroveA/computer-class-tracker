@@ -64,13 +64,11 @@ app.post('/api/computers', (req, res, next) => {
 
 app.post('/api/computers/:id', (req, res, next) => {
   Computer.findById(req.params.id).then(computer => {
+    console.log(req.body.update);
     computer.lastUpdate = Date.parse(req.body.date);
     computer.tempeture = req.body.update.CPU.TempetureTotal;
     computer.cpuLoad = req.body.update.CPU.LoadTotal;
-
-    computer.Save().then(save => console.log("Updated computer short info"));
-
-    res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id });
+    computer.save().then(save => res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id }));
   }).catch(error => {
     res.status(400).end("Computer with your id not found :|");
   })
@@ -78,8 +76,10 @@ app.post('/api/computers/:id', (req, res, next) => {
 });
 
 app.get('/api/computers', (req, res, next) => {
-  console.log('GET COMP');
-  res.status(200).end();
+  Computer.find({}).sort({lastUpdate: 1,  online: 1}).then(computers => {
+    res.status(200).json(computers);
+  }).catch(error => res.status(400).end("Error%@!##!!:("));
+
 });
 
 

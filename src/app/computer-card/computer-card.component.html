@@ -19,20 +19,28 @@
 
   </mat-card-header>
   <mat-card-content>
-    <p *ngIf="this.computer.cpu">CPU: {{ this.computer.cpu.name }}</p>
-    <p *ngIf="this.computer.gpu">GPU: {{ this.computer.gpu.name }}</p>
-    <p *ngIf="this.computer.ram">RAM: {{ round(this.computer.ram.memoryTotal) }} GB</p>
+    <p *ngIf="this.computer.cpuName">CPU: {{ this.computer.cpuName }}</p>
+    <p *ngIf="this.computer.gpuName">GPU: {{ this.computer.gpuName }}</p>
+    <p *ngIf="this.computer.ram">RAM: {{ round(this.computer.ram) }} GB</p>
 
   </mat-card-content>
-  <mat-card-actions *ngIf="this.computer.online">
-      <mat-chip-list>
-          <mat-chip>
+  <mat-card-actions *ngIf="computer.online">
+      <mat-chip-list selectable="false">
+          <mat-chip >
               <fa-icon [icon]="['fas','thermometer-quarter']" size="2x"></fa-icon>
-              {{ getComputerTempeture() | number: '2.0-1'}}°C
+              <span
+              [countUp]="tempValue"
+              [options]="tempOptions"
+              reanimateOnClick="false"
+              >0</span>
           </mat-chip>
-          <mat-chip>
+          <mat-chip >
               <fa-icon [icon]="['fas','tachometer-alt']" size="2x"></fa-icon>
-              {{ getComputerLoad() | number: '2.0-1' }}%
+              <span
+              [countUp]="loadValue"
+              [options]="loadOptions"
+              reanimateOnClick="false"
+              >0</span>
           </mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>

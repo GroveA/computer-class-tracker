@@ -1,18 +1,16 @@
-import { CPU } from './cpu.model';
-import { GPU } from './gpu.model';
-import { HDD } from './hdd.model';
-import { RAM } from './ram.model';
-
 
 export interface Computer {
+  _id: string;
   name: string;
   hostName: string;
   macAddress: string;
-  ipAddress: string;
   motherboard: string;
+  cpuName: string;
+  cpuCores: number;
+  gpuName: string;
+  ram: number;
   online: boolean;
-  cpu: CPU;
-  gpu?: GPU;
-  hdd?: HDD;
-  ram: RAM;
+  lastUpdate: Date;
+  cpuLoad: number;
+  tempeture: number;
 }
