@@ -21,3 +21,7 @@
   top: 0;
 
 }
+
+mat-sidenav-content{
+  overflow: hidden;
+}

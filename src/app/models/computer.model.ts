@@ -13,4 +13,5 @@ export interface Computer {
   lastUpdate: Date;
   cpuLoad: number;
   tempeture: number;
+  groupId: string;
 }

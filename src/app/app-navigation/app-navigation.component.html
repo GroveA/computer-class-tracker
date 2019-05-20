@@ -6,12 +6,7 @@
       [mode] = "!(isHandset$ | async)? 'side' : 'over'"
       [opened]="!(isHandset$ | async)">
     <mat-toolbar class="first-top" color="primary" *ngIf="!(isHandset$ | async)"></mat-toolbar>
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
-    </mat-nav-list>
+    <ng-content select="[sidebar]"></ng-content>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="fixed-header" color="primary" >
@@ -23,8 +18,8 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>computer-class-tracker</span>
+      <span>Computer tracker</span>
     </mat-toolbar>
-    <ng-content></ng-content>
+    <ng-content select="[main]"></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>

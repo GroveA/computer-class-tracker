@@ -1,4 +1,4 @@
-<mat-card *ngIf="this.computer">
+<mat-card *ngIf="this.computer" >
     <mat-menu #computerMenu="matMenu">
         <button mat-menu-item>
             <fa-icon [icon]="['far','edit']"></fa-icon>
@@ -24,9 +24,10 @@
     <p *ngIf="this.computer.ram">RAM: {{ round(this.computer.ram) }} GB</p>
 
   </mat-card-content>
-  <mat-card-actions *ngIf="computer.online">
-      <mat-chip-list selectable="false">
-          <mat-chip >
+  <mat-card-actions >
+
+      <mat-chip-list  selectable="false">
+          <mat-chip *ngIf="computer.online" >
               <fa-icon [icon]="['fas','thermometer-quarter']" size="2x"></fa-icon>
               <span
               [countUp]="tempValue"
@@ -34,13 +35,18 @@
               reanimateOnClick="false"
               >0</span>
           </mat-chip>
-          <mat-chip >
+          <mat-chip *ngIf="computer.online" >
               <fa-icon [icon]="['fas','tachometer-alt']" size="2x"></fa-icon>
               <span
               [countUp]="loadValue"
               [options]="loadOptions"
               reanimateOnClick="false"
               >0</span>
+          </mat-chip>
+
+          <mat-chip class="last-update" *ngIf="!computer.online" >
+              <fa-icon [icon]="['far','calendar-alt']" size="2x"></fa-icon>
+              <span >Last seen: {{ computer.lastUpdate | date: 'medium'}}</span>
           </mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>

@@ -8,6 +8,8 @@ const app = express();
 
 const Computer = require('./models/computerInfo');
 
+const Group = require('./models/computerGroup');
+
 
 mongoose
   .connect(
@@ -64,7 +66,6 @@ app.post('/api/computers', (req, res, next) => {
 
 app.post('/api/computers/:id', (req, res, next) => {
   Computer.findById(req.params.id).then(computer => {
-    console.log(req.body.update);
     computer.lastUpdate = Date.parse(req.body.date);
     computer.tempeture = req.body.update.CPU.TempetureTotal;
     computer.cpuLoad = req.body.update.CPU.LoadTotal;
@@ -72,8 +73,21 @@ app.post('/api/computers/:id', (req, res, next) => {
   }).catch(error => {
     res.status(400).end("Computer with your id not found :|");
   })
-
 });
+
+
+app.post('/api/computers/:id/offline', (req, res, next) => {
+  console.log(`${req.params.id} going offline! Bye!`);
+  Computer.findById(req.params.id).then(computer => {
+    computer.online = false;
+    computer.save().then(save => res.status(200).json({ message: 'Bye!'}));
+  }).catch(error => {
+    res.status(400).end("Computer with your id not found :|");
+  })
+});
+
+
+
 
 app.get('/api/computers', (req, res, next) => {
   Computer.find({}).sort({lastUpdate: 1,  online: 1}).then(computers => {
@@ -82,6 +96,19 @@ app.get('/api/computers', (req, res, next) => {
 
 });
 
+app.get('/api/groups', (req, res, next) => {
+  Group.find({}).then(groups => {
+    res.status(200).json({message: "All groups", groups: groups});
+  }).catch(error => res.status(400).end(error));
+});
+
+app.post('/api/groups', (req, res, next) => {
+  const group = new Group();
+  group.name = req.body.name;
+  group.save()
+  .then((gr)=> res.status(200).json({ message: "Added new group!", id: gr._id}))
+  .catch(err=> res.status(400).end(err));
+})
 
 app.get('/api/computers/:id', (req, res, next) => {
 

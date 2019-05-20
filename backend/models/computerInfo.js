@@ -13,7 +13,11 @@ const computerInfoSchema = new Schema({
   online: Boolean,
   lastUpdate: Date,
   cpuLoad: Number,
-  tempeture: Number
+  tempeture: Number,
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group'
+  }
 });
 
 

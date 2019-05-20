@@ -1,3 +1,24 @@
 app-computer-card{
   margin-left: 5px;
 }
+
+.row {
+  margin-left: 0px;
+}
+
+mat-expansion-panel{
+  margin-top: 5px;
+  box-shadow: none;
+  border: none;
+}
+
+mat-expansion-panel.online-panel{
+  background: rgba($color: #a7e0b3, $alpha: 0.2)
+}
+
+mat-expansion-panel.offline-panel{
+  background: rgba($color: #cdd3cf, $alpha: 0.2)
+}
+
+
+

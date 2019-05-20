@@ -50,4 +50,8 @@ export class ComputerListComponent implements OnInit, OnDestroy {
     }, {});
     return diff;
   }
+
+  public getOnline(): number {
+    return this.computers.filter(comp => comp.online).length;
+  }
 }

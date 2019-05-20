@@ -1,0 +1,8 @@
+<mat-toolbar>Groups</mat-toolbar>
+<mat-nav-list>
+      <a mat-list-item *ngFor="let group of groups">{{ group.name }}</a>
+      <a mat-list-item>Unassigned</a>
+</mat-nav-list>
+
+<a type="button" class="bottom-btn"  mat-raised-button color="accent" (click)="createGroup()">Create new group</a>
+

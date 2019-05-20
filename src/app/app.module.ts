@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from "@angular/forms";
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +16,11 @@ import {
   MatGridListModule,
   MatCardModule,
   MatMenuModule,
+  MatExpansionModule,
+  MatBadgeModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule
 } from '@angular/material';
 
 
@@ -29,19 +35,29 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComputerListComponent } from './computer-list/computer-list.component';
 
 import { CountUpModule } from 'countup.js-angular2';
+import { GroupPanelComponent } from './group-panel/group-panel.component';
+import { CreateGroupComponent } from './dialogs/create-group/create-group.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppNavigationComponent,
     ComputerCardComponent,
-    ComputerListComponent
+    ComputerListComponent,
+    GroupPanelComponent,
+    CreateGroupComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatBadgeModule,
     MatGridListModule,
     MatCardModule,
+    MatExpansionModule,
     MatMenuModule,
     MatToolbarModule,
     MatIconModule,
@@ -55,7 +71,8 @@ import { CountUpModule } from 'countup.js-angular2';
     CountUpModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [CreateGroupComponent]
 })
 export class AppModule {
   constructor() {

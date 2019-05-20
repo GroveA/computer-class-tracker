@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Create new group</h2>
+<form (submit)="onAddGroup(groupForm)" #groupForm="ngForm">
+<mat-dialog-content>
+    <mat-form-field>
+        <input matInput
+        type="text"
+        name="nameg"
+        ngModel
+        required
+        minlength="3"
+        placeholder="Group Name"
+        #name="ngModel">
+        <mat-error *ngIf="name.invalid">Please a valid group name.</mat-error>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">Cancel</button>
+    <button class="mat-raised-button mat-primary" type="submit" [disabled]="groupForm.invalid">Create</button>
+</mat-dialog-actions>
+</form>
