@@ -3,7 +3,7 @@ import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { Computer } from '../models/computer.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, Subscription, interval } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { startWith, switchMap, map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -15,13 +15,18 @@ export class ComputersService implements OnInit, OnDestroy {
   private computersUpdated = new Subject<Computer[]>();
   private postUpdater: Subscription;
   constructor(public http: HttpClient) {
-    console.log('constructor');
     this.postUpdater = interval(3000)
     .pipe(
       startWith(0),
       switchMap(() => this.http.get<Computer[]>(
         'http://localhost:3000/api/computers'
-        ))
+        ).pipe(map((computerData) => {
+          return computerData.map(comp => {
+            comp.groupId = comp.group;
+            return comp;
+          });
+        })),
+        )
     ).subscribe(res => {
       this.computers = res;
       this.computersUpdated.next([...this.computers]);
@@ -29,17 +34,31 @@ export class ComputersService implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('init');
-
   }
 
   ngOnDestroy() {
     this.postUpdater.unsubscribe();
-    console.log('destory');
   }
 
   getComputersUpdateListener() {
     return this.computersUpdated.asObservable();
+  }
+
+  updateComputerGroup(computerID: string, groupID: string) {
+    console.log(groupID);
+    this.http
+    .post<{message: string}>(`http://localhost:3000/api/computers/${computerID}/group`, { groupId: groupID })
+    .subscribe(res => {
+      this.computers.find(comp => comp._id === computerID).groupId = groupID;
+      this.computersUpdated.next([...this.computers]);
+    })
+  }
+
+  getComputerById(id: string): Computer {
+    this.computers.forEach(comp => {
+      if (comp._id === id) { return comp; }
+    });
+    return null;
   }
 
   getComputers() {

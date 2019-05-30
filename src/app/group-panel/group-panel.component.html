@@ -1,7 +1,18 @@
 <mat-toolbar>Groups</mat-toolbar>
-<mat-nav-list>
-      <a mat-list-item *ngFor="let group of groups">{{ group.name }}</a>
-      <a mat-list-item>Unassigned</a>
+<mat-nav-list disableRipple="true">
+      <a mat-list-item
+      *ngFor="let group of groups"
+      (click)="selectGroup(group)"
+      [routerLink]="['groups/', group.name]"
+      routerLinkActive="list-item-active"
+      >
+      {{ group.name }}</a>
+      <a mat-list-item
+      (click)="selectGroup(null)"
+      routerLink="groups/all"
+      routerLinkActive="list-item-active"
+      >
+      All</a>
 </mat-nav-list>
 
 <a type="button" class="bottom-btn"  mat-raised-button color="accent" (click)="createGroup()">Create new group</a>

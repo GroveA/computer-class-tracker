@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { Group } from '../models/group.model';
 export class GroupsService {
   private groups: Group[] = [];
   private groupsUpdated = new Subject<Group[]>();
+  private groupSelected = new EventEmitter<Group>();
 
   constructor(private http: HttpClient) {}
 
@@ -54,5 +55,10 @@ export class GroupsService {
         this.groups = updatedGroups;
         this.groupsUpdated.next([...this.groups]);
       });
+  }
+
+
+  getGroupSelectedListener() {
+    return this.groupSelected;
   }
 }

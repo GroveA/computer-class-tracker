@@ -20,7 +20,8 @@ import {
   MatBadgeModule,
   MatDialogModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  MatSelectModule
 } from '@angular/material';
 
 
@@ -37,6 +38,22 @@ import { ComputerListComponent } from './computer-list/computer-list.component';
 import { CountUpModule } from 'countup.js-angular2';
 import { GroupPanelComponent } from './group-panel/group-panel.component';
 import { CreateGroupComponent } from './dialogs/create-group/create-group.component';
+import { RouterModule, Routes } from '@angular/router';
+import { ComputerDetailComponent } from './computer-detail/computer-detail.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SelectGroupComponent } from './dialogs/select-group/select-group.component';
+
+const appRoutes: Routes = [
+  { path: 'groups/all', component: ComputerListComponent },
+  { path: 'groups/:id', component: ComputerListComponent},
+  { path: 'computer/:id',      component: ComputerDetailComponent },
+  { path: '',
+    redirectTo: '/groups/all',
+    pathMatch: 'full'
+  },
+  { path: '**', component: PageNotFoundComponent }
+];
+
 
 @NgModule({
   declarations: [
@@ -44,15 +61,22 @@ import { CreateGroupComponent } from './dialogs/create-group/create-group.compon
     AppNavigationComponent,
     ComputerCardComponent,
     ComputerListComponent,
+    ComputerDetailComponent,
     GroupPanelComponent,
-    CreateGroupComponent
+    CreateGroupComponent,
+    PageNotFoundComponent,
+    SelectGroupComponent
   ],
   imports: [
+    RouterModule.forRoot(
+      appRoutes
+    ),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatDialogModule,
     MatInputModule,
+    MatSelectModule,
     MatFormFieldModule,
     MatBadgeModule,
     MatGridListModule,
@@ -72,7 +96,7 @@ import { CreateGroupComponent } from './dialogs/create-group/create-group.compon
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [CreateGroupComponent]
+  entryComponents: [CreateGroupComponent, SelectGroupComponent]
 })
 export class AppModule {
   constructor() {

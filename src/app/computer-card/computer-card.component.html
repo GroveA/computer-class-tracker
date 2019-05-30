@@ -5,9 +5,9 @@
           <span>Change computer name</span>
         </button>
 
-        <button mat-menu-item>
-            <fa-icon [icon]="['far','minus-square']"></fa-icon>
-          <span>Remove from group</span>
+        <button mat-menu-item (click)="selectGroup()">
+            <fa-icon [icon]="['fas','object-group']"></fa-icon>
+          <span>Select computer group</span>
         </button>
       </mat-menu>
   <mat-card-header>
@@ -46,11 +46,11 @@
 
           <mat-chip class="last-update" *ngIf="!computer.online" >
               <fa-icon [icon]="['far','calendar-alt']" size="2x"></fa-icon>
-              <span >Last seen: {{ computer.lastUpdate | date: 'medium'}}</span>
+              <span >{{ computer.lastUpdate | date: 'dd/MM/yy HH:mm'}}</span>
           </mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>
-    <button mat-fab>Details</button>
+    <button mat-fab [routerLink]="['/computer', computer._id]">Details</button>
   </mat-card-actions>
 </mat-card>
 

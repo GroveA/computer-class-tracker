@@ -20,8 +20,8 @@
         </mat-expansion-panel-header>
 
         <div class="row">
-          <ng-template ngFor let-computer="$implicit" [ngForOf]="computers" >
-          <div class="col-xs-12 col-sm-6  col-md-4" *ngIf="computer.online">
+          <ng-template ngFor let-computer="$implicit" [ngForOf]="getComputersByGroup()" >
+          <div class="col-xs-12 off offset-sm-1 col-sm-10 col-md-4" *ngIf="computer.online">
               <app-computer-card  [computer]="computer"></app-computer-card>
           </div>
           </ng-template>
@@ -35,15 +35,15 @@
     <mat-expansion-panel [expanded]="true" class="offline-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-              <h3 class="my-5 " matBadgeOverlap="false" [matBadge]="this.computers.length-getOnline()">Offline</h3>
+              <h3 class="my-5 " matBadgeOverlap="false" [matBadge]="getComputersByGroup().length-getOnline()">Offline</h3>
           </mat-panel-title>
         </mat-expansion-panel-header>
 
 
 
         <div class="row">
-            <ng-template ngFor let-computer="$implicit" [ngForOf]="computers" >
-                <div class="col-xs-12 col-sm-6  col-md-4" *ngIf="!computer.online">
+            <ng-template ngFor let-computer="$implicit" [ngForOf]="getComputersByGroup()" >
+                <div class="col-xs-12 offset-sm-1 col-sm-10 col-md-4" *ngIf="!computer.online">
                     <app-computer-card  [computer]="computer"></app-computer-card>
                 </div>
             </ng-template>

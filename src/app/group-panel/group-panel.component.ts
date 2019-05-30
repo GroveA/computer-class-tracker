@@ -13,6 +13,7 @@ import { CreateGroupComponent } from '../dialogs/create-group/create-group.compo
 })
 export class GroupPanelComponent implements OnInit, OnDestroy {
   private groupUpdateSubscription: Subscription;
+  private selectedGroup: Group;
   groups: Group[];
 
   constructor(private groupsService: GroupsService,
@@ -30,6 +31,12 @@ export class GroupPanelComponent implements OnInit, OnDestroy {
 
   createGroup(): void {
     this.dialog.open(CreateGroupComponent);
+  }
+
+
+  selectGroup(group: Group): void{
+    this.selectedGroup = group;
+    this.groupsService.getGroupSelectedListener().emit(this.selectedGroup);
   }
 
 }

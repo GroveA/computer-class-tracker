@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ComputersService } from '../services/computers.service';
 import { Computer } from '../models/computer.model';
 import { Subscription } from 'rxjs';
+import { Group } from '../models/group.model';
+import { GroupsService } from '../services/group.service';
 
 @Component({
   selector: 'app-computer-list',
@@ -10,20 +12,26 @@ import { Subscription } from 'rxjs';
 })
 export class ComputerListComponent implements OnInit, OnDestroy {
 
+  private selectedGroup: Group = null;
+
   public computers: Computer[] = [];
 
   private updateSubsription: Subscription;
+  private groupChangeSubsription: Subscription;
 
-  constructor(private computersService: ComputersService) { }
+  constructor(private computersService: ComputersService,
+              private groupsService: GroupsService) { }
 
   ngOnInit() {
     this.updateSubsription = this.computersService
     .getComputersUpdateListener()
     .subscribe((updatedComputers => this.updateComputerList(updatedComputers)));
+    this.groupChangeSubsription = this.groupsService.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; console.log(this.selectedGroup);});
   }
 
   ngOnDestroy() {
     this.updateSubsription.unsubscribe();
+    this.groupChangeSubsription.unsubscribe();
   }
 
   private updateComputerList(updatedList: Computer[]){
@@ -52,6 +60,11 @@ export class ComputerListComponent implements OnInit, OnDestroy {
   }
 
   public getOnline(): number {
-    return this.computers.filter(comp => comp.online).length;
+    return this.getComputersByGroup().filter(comp => comp.online).length;
+  }
+
+  getComputersByGroup(): Computer[] {
+    if (this.selectedGroup == null) { return this.computers; }
+    return this.computers.filter(comp => comp.groupId === this.selectedGroup.id);
   }
 }

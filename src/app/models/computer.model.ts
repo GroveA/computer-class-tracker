@@ -14,4 +14,5 @@ export interface Computer {
   cpuLoad: number;
   tempeture: number;
   groupId: string;
+  group: string;
 }

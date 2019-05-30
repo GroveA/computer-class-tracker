@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { Computer } from '../models/computer.model';
-import { template } from '@angular/core/src/render3';
+import { MatDialog } from '@angular/material';
+import { SelectGroupComponent } from '../dialogs/select-group/select-group.component';
 
 @Component({
   selector: 'app-computer-card',
@@ -12,9 +13,8 @@ export class ComputerCardComponent implements OnInit, DoCheck {
   @Input() computer: Computer;
 
   round = Math.round;
-  constructor() {
-    console.log(' created :-P');
-  }
+
+  constructor(private dialog: MatDialog) {}
 
   tempValue = 0;
   loadValue = 0;
@@ -40,6 +40,12 @@ export class ComputerCardComponent implements OnInit, DoCheck {
     this.loadOptions.startVal = this.loadValue;
     this.tempValue = this.computer.tempeture;
     this.loadValue = this.computer.cpuLoad;
+  }
+
+  selectGroup() {
+    this.dialog.open(SelectGroupComponent, {
+      data: { computerId : this.computer._id}
+    });
   }
 
 }

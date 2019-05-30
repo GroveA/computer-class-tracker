@@ -23,6 +23,9 @@ mongoose
     console.log("Database connection failed!");
   });
 
+
+mongoose.set('useFindAndModify', false);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -86,6 +89,16 @@ app.post('/api/computers/:id/offline', (req, res, next) => {
   })
 });
 
+app.post('/api/computers/:id/group', (req, res, next) => {
+  console.log(req.body.groupId);
+  Computer.findByIdAndUpdate(req.params.id, {$set: {group : req.body.groupId}})
+  .then((doc) => {
+    console.log(doc);
+    res.status(200).json({message: "Succesfully updated group!"});
+  })
+  .catch((err)=> res.status(400).end(err));
+
+});
 
 
 
