@@ -1,21 +1,10 @@
-    <!-- <div class="row">
-      <div class="col-xs-12 col-sm-12  col-md-12">
-        <h3 class="mx-3 py-2">Online</h3>
-        <mat-divider [inset]="false" class="mx-3"></mat-divider>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-xs-12 col-sm-6  col-md-4" *ngFor="let computer of computers">
-          <app-computer-card [computer]="computer"></app-computer-card>
-      </div>
-    </div> -->
 
   <div class="col-xs-12 col-sm-12  col-md-12">
     <mat-expansion-panel [expanded]="true" class="online-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-              <h3 class="my-5" matBadgeOverlap="false" [matBadge]="this.getOnline()">Online</h3>
+              <h3 class="my-5" matBadgeOverlap="false" [matBadge]="this.getOnline()">Підключені</h3>
           </mat-panel-title>
         </mat-expansion-panel-header>
 
@@ -35,7 +24,7 @@
     <mat-expansion-panel [expanded]="true" class="offline-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-              <h3 class="my-5 " matBadgeOverlap="false" [matBadge]="getComputersByGroup().length-getOnline()">Offline</h3>
+              <h3 class="my-5 " matBadgeOverlap="false" [matBadge]="getComputersByGroup().length-getOnline()">Відключені</h3>
           </mat-panel-title>
         </mat-expansion-panel-header>
 

@@ -8,6 +8,9 @@ const app = express();
 
 const Computer = require('./models/computerInfo');
 
+const Indicators = require('./models/computerIndicators');
+
+
 const Group = require('./models/computerGroup');
 
 
@@ -68,19 +71,40 @@ app.post('/api/computers', (req, res, next) => {
 });
 
 app.post('/api/computers/:id', (req, res, next) => {
-  Computer.findById(req.params.id).then(computer => {
-    computer.lastUpdate = Date.parse(req.body.date);
-    computer.tempeture = req.body.update.CPU.TempetureTotal;
-    computer.cpuLoad = req.body.update.CPU.LoadTotal;
-    computer.save().then(save => res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id }));
-  }).catch(error => {
-    res.status(400).end("Computer with your id not found :|");
-  })
-});
+  var indicators = new Indicators();
+  indicators.date = Date.parse(req.body.date);
+  indicators.computer = new mongoose.Types.ObjectId(req.params.id);
+  indicators.CPU.LoadTotal = req.body.update.CPU.LoadTotal;
+  indicators.CPU.TempetureTotal = req.body.update.CPU.TempetureTotal;
+  indicators.CPU.Load = req.body.update.CPU.Load;
+  indicators.CPU.Tempeture = req.body.update.CPU.Tempeture;
+  indicators.CPU.Cores = req.body.update.CPU.Cores;
+  indicators.CPU.Cores = req.body.update.CPU.Cores;
+  indicators.GPU.Tempeture = req.body.update.GPU.Tempeture;
+  indicators.RAM.UsedMemory = req.body.update.RAM.UsedMemory;
+  indicators.RAM.AvaliableMemory = req.body.update.RAM.AvaliableMemory;
+
+  indicators.save().then(savedIndi => {
+      Computer.findById(req.params.id).then(computer => {
+        computer.lastUpdate = Date.parse(req.body.date);
+        computer.tempeture = req.body.update.CPU.TempetureTotal;
+        computer.cpuLoad = req.body.update.CPU.LoadTotal;
+        computer.save().then(save => res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id }));
+      }).catch(error => {
+        res.status(400).end("Computer with your id not found :|");
+      })
+    }).catch( error => res.status(400).end("Computer with your id not found :|"));
+  });
+
+
+
+
+
+
 
 
 app.post('/api/computers/:id/offline', (req, res, next) => {
-  console.log(`${req.params.id} going offline! Bye!`);
+
   Computer.findById(req.params.id).then(computer => {
     computer.online = false;
     computer.save().then(save => res.status(200).json({ message: 'Bye!'}));
@@ -100,6 +124,11 @@ app.post('/api/computers/:id/group', (req, res, next) => {
 
 });
 
+app.get('/api/computers/:id', (req, res, next) => {
+  Indicators.find({computer: new mongoose.Types.ObjectId(req.params.id)})
+  .then(allIndi => res.status(200).json(allIndi))
+  .catch(err => res.status(400).end(err));
+});
 
 
 app.get('/api/computers', (req, res, next) => {
@@ -123,7 +152,5 @@ app.post('/api/groups', (req, res, next) => {
   .catch(err=> res.status(400).end(err));
 })
 
-app.get('/api/computers/:id', (req, res, next) => {
 
-});
 module.exports = app;

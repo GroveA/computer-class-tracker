@@ -2,12 +2,12 @@
     <mat-menu #computerMenu="matMenu">
         <button mat-menu-item>
             <fa-icon [icon]="['far','edit']"></fa-icon>
-          <span>Change computer name</span>
+          <span>Поміняти ім'я комп'ютера</span>
         </button>
 
         <button mat-menu-item (click)="selectGroup()">
             <fa-icon [icon]="['fas','object-group']"></fa-icon>
-          <span>Select computer group</span>
+          <span>Вибрати групу</span>
         </button>
       </mat-menu>
   <mat-card-header>
@@ -50,7 +50,7 @@
           </mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>
-    <button mat-fab [routerLink]="['/computer', computer._id]">Details</button>
+    <button mat-fab [routerLink]="['/computer', computer._id]">Детально</button>
   </mat-card-actions>
 </mat-card>
 

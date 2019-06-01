@@ -1,4 +1,4 @@
-<mat-toolbar>Groups</mat-toolbar>
+<mat-toolbar>Групи</mat-toolbar>
 <mat-nav-list disableRipple="true">
       <a mat-list-item
       *ngFor="let group of groups"
@@ -12,8 +12,8 @@
       routerLink="groups/all"
       routerLinkActive="list-item-active"
       >
-      All</a>
+      Всі</a>
 </mat-nav-list>
 
-<a type="button" class="bottom-btn"  mat-raised-button color="accent" (click)="createGroup()">Create new group</a>
+<a type="button" class="bottom-btn"  mat-raised-button  (click)="createGroup()">Добавити групу</a>
 

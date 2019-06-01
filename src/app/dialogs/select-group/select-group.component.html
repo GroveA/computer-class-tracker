@@ -1,14 +1,14 @@
-<h2 mat-dialog-title>Select computer group</h2>
+<h2 mat-dialog-title>Вибрати групу для комп'ютера</h2>
 <form (submit)="onSelectGroup(groupForm)" #groupForm="ngForm">
 <mat-dialog-content>
   <mat-form-field>
-    <mat-label>Group Name</mat-label>
+    <mat-label>Назва групи</mat-label>
     <mat-select ngModel name="selectedGroup">
       <mat-option *ngFor="let group of groups" [value]="group.id">
         {{group.name}}
       </mat-option>
       <mat-option [value]="null">
-          No group
+          Без групи
         </mat-option>
     </mat-select>
   </mat-form-field>
@@ -16,7 +16,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button class="mat-raised-button"(click)="close()">Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit" [disabled]="groupForm.invalid">Save</button>
+    <button class="mat-raised-button"(click)="close()">Відмінити</button>
+    <button class="mat-raised-button mat-primary" type="submit" [disabled]="groupForm.invalid">Зберегти</button>
 </mat-dialog-actions>
 </form>

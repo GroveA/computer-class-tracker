@@ -17,7 +17,7 @@
                   <mat-card-subtitle>Материнська плата: {{ this.computer.motherboard }}</mat-card-subtitle>
                   <mat-card-subtitle>MAC-адрес: {{ this.computer.macAddress }}</mat-card-subtitle>
                   <mat-card-subtitle>Статус підключення: {{ this.computer.online? 'Підключений': 'Відключений' }}</mat-card-subtitle>
-                  <mat-card-subtitle>Останнє оновлення показників: {{ this.computer.lastUpdate | date: 'dd/MM/yy HH:mm' }}</mat-card-subtitle>
+                  <mat-card-subtitle>Останнє оновлення показників: {{ this.computer.lastUpdate | date: 'dd/MM/yy HH:mm:ss' }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
 
@@ -37,6 +37,27 @@
                 </mat-card-header>
                 <mat-card-content>
 
+                  <div class="card" *ngIf="this.current">
+                    <div class="card-body">
+                      <h4 class="card-title">Температура:</h4>
+                      <div class="progress w-50" *ngFor="let temp of this.current.CPU.Tempeture; let i = index">
+                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="temp+'%'" aria-valuemin="0" aria-valuemax="100">Ядро №{{ i + 1}} : {{ temp }} ℃</div>
+                       </div>
+                    </div>
+                  </div>
+
+                  <div class="card" *ngIf="this.current">
+                      <div class="card-body">
+                        <h4 class="card-title">Навантаження:</h4>
+                        <div class="progress w-50" *ngFor="let load of this.current.CPU.Load; let i = index">
+                            <div class="progress-bar bg-warning" role="progressbar" [style.width]="load+'%'" aria-valuemin="0" aria-valuemax="100">Ядро №{{ i + 1}} : {{ load }}%</div>
+                         </div>
+                      </div>
+                    </div>
+
+
+
+
 
 
                 </mat-card-content>
@@ -49,10 +70,18 @@
 
                   <mat-card-title><h5>Графічний процесор</h5></mat-card-title>
                   <mat-card-subtitle>Модель: {{ this.computer.gpuName }}</mat-card-subtitle>
-                  <mat-card-subtitle>Відеопам'ять: {{ this.computer.gpuName }}</mat-card-subtitle>
+                  <mat-card-subtitle>Відеопам'ять: 2 GB</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
 
+                <div class="card" *ngIf="this.current">
+                    <div class="card-body">
+                      <h4 class="card-title">Температура:</h4>
+                      <div class="progress w-50">
+                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="this.current.GPU.Tempeture+'%'" aria-valuemin="0" aria-valuemax="100">{{ this.current.GPU.Tempeture }} ℃</div>
+                        </div>
+                    </div>
+                  </div>
 
 
                 </mat-card-content>
@@ -66,7 +95,15 @@
                   <mat-card-subtitle>Вмісткість: {{ this.computer.ram }} GB</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
-
+                    <div class="card" *ngIf="this.current">
+                        <div class="card-body">
+                          <h4 class="card-title">Пам'ять:</h4>
+                          <div class="progress">
+                              <div class="progress-bar bg-success" [style.width]="getRAM(false)+'%'" role="progressbar"  aria-valuemin="0" aria-valuemax="100">Вільно: {{ this.current.RAM.AvaliableMemory | number }} GB</div>
+                              <div class="progress-bar bg-danger" role="progressbar" [style.width]="getRAM(true)+'%'"  aria-valuemin="0" aria-valuemax="100">Використано: {{  this.current.RAM.UsedMemory | number }} GB</div>
+                            </div>
+                        </div>
+                      </div>
 
 
                 </mat-card-content>
@@ -81,7 +118,9 @@
                 </mat-card-header>
                 <mat-card-content>
 
-
+                  <div *ngIf="chart">
+                    <canvas id="canvas"> {{ chart }}</canvas>
+                  </div>
 
                 </mat-card-content>
 
