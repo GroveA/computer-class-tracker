@@ -29,7 +29,7 @@ export class ComputersService implements OnInit, OnDestroy {
         )
     ).subscribe(res => {
       this.computers = res;
-      this.computersUpdated.next([...this.computers]);
+      this.computersUpdated.next(this.computers.slice());
     });
   }
 
@@ -50,7 +50,7 @@ export class ComputersService implements OnInit, OnDestroy {
     .post<{message: string}>(`http://localhost:3000/api/computers/${computerID}/group`, { groupId: groupID })
     .subscribe(res => {
       this.computers.find(comp => comp._id === computerID).groupId = groupID;
-      this.computersUpdated.next([...this.computers]);
+      this.computersUpdated.next(this.computers.slice());
     })
   }
 
@@ -62,7 +62,7 @@ export class ComputersService implements OnInit, OnDestroy {
   }
 
   getComputers() {
-    return [...this.computers];
+    return this.computers.slice();
   }
 
 

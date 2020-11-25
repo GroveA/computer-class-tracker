@@ -16,7 +16,7 @@ const Group = require('./models/computerGroup');
 
 mongoose
   .connect(
-    "mongodb+srv://grove:a123u123a@cluster0-jj9ty.mongodb.net/computer-tracker?retryWrites=true",
+    "mongodb://localhost:27017/computer-tracker?retryWrites=true",
     { useNewUrlParser: true }
   )
   .then(() => {
@@ -31,7 +31,6 @@ mongoose.set('useFindAndModify', false);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -152,5 +151,8 @@ app.post('/api/groups', (req, res, next) => {
   .catch(err=> res.status(400).end(err));
 })
 
+app.listen(3000, () => {
+  console.log("Server is lintening on port 3000")
+})
 
 module.exports = app;

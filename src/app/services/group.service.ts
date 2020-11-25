@@ -28,7 +28,7 @@ export class GroupsService {
       }))
       .subscribe(transformedPosts => {
         this.groups = transformedPosts;
-        this.groupsUpdated.next([...this.groups]);
+        this.groupsUpdated.next(this.groups.slice());
       });
   }
 
@@ -44,7 +44,7 @@ export class GroupsService {
         const id = responseData.groupId;
         group.id = id;
         this.groups.push(group);
-        this.groupsUpdated.next([...this.groups]);
+        this.groupsUpdated.next(this.groups.slice());
       });
   }
 
@@ -53,7 +53,7 @@ export class GroupsService {
       .subscribe(() => {
         const updatedGroups = this.groups.filter(post => post.id !== groupId);
         this.groups = updatedGroups;
-        this.groupsUpdated.next([...this.groups]);
+        this.groupsUpdated.next(this.groups.slice());
       });
   }
 
