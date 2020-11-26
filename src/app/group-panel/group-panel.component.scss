@@ -8,6 +8,16 @@
     bottom: 60px;
     text-align: center;
 }
+.bottom-btn-1{
+
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    font-size: 1.3rem;
+    height: 40px;
+    bottom: 10px;
+    text-align: center;
+}
 
 .active-group{
   background-color: rgba($color: #3b3434, $alpha: 0.5)

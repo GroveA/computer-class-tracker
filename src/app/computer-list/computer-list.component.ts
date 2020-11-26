@@ -4,6 +4,7 @@ import { Computer } from '../models/computer.model';
 import { Subscription } from 'rxjs';
 import { Group } from '../models/group.model';
 import { GroupsService } from '../services/group.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-computer-list',
@@ -20,13 +21,16 @@ export class ComputerListComponent implements OnInit, OnDestroy {
   private groupChangeSubsription: Subscription;
 
   constructor(private computersService: ComputersService,
-              private groupsService: GroupsService) { }
+              private groupsService: GroupsService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.updateSubsription = this.computersService
     .getComputersUpdateListener()
     .subscribe((updatedComputers => this.updateComputerList(updatedComputers)));
-    this.groupChangeSubsription = this.groupsService.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; console.log(this.selectedGroup);});
+    this.groupChangeSubsription = this.groupsService.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; });
+
+    this.selectedGroup = this.groupsService.getLastSelectedGroup()
+    this.computers = this.computersService.getComputers()
   }
 
   ngOnDestroy() {
@@ -36,6 +40,11 @@ export class ComputerListComponent implements OnInit, OnDestroy {
 
   private updateComputerList(updatedList: Computer[]){
     updatedList.forEach((updatedComputer) => {
+      this.toastr.show("Получено нові дані", "", {
+        timeOut: 1000,
+        extendedTimeOut: 0,
+        positionClass: 'toast-bottom-right'
+      }, 'toast-info')
       const computerIndex = this.computers.findIndex(comp => comp._id === updatedComputer._id);
       if (computerIndex === -1) {
         this.computers.push(updatedComputer);

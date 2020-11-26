@@ -5,6 +5,7 @@ import { Group } from '../models/group.model';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateGroupComponent } from '../dialogs/create-group/create-group.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-group-panel',
@@ -17,11 +18,17 @@ export class GroupPanelComponent implements OnInit, OnDestroy {
   groups: Group[];
 
   constructor(private groupsService: GroupsService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private toastr: ToastrService
+              ) {
+
+                
+      }
 
   ngOnInit() {
     this.groupsService.getGroups();
     this.groupUpdateSubscription = this.groupsService.getGroupUpdateListener().subscribe(updatedGroups => this.groups = updatedGroups);
+    
   }
 
   ngOnDestroy(): void {
@@ -33,6 +40,16 @@ export class GroupPanelComponent implements OnInit, OnDestroy {
     this.dialog.open(CreateGroupComponent);
   }
 
+  removeGroup() {
+    if (this.selectedGroup) 
+      this.groupsService.deleteGroup(this.selectedGroup.id)
+    else 
+      this.toastr.show("Цю групу неможливо видалити", "", {
+        timeOut: 1000,
+        extendedTimeOut: 0,
+        positionClass: 'toast-bottom-right'
+      }, 'toast-error')
+  }
 
   selectGroup(group: Group): void{
     this.selectedGroup = group;

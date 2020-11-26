@@ -2,6 +2,7 @@ import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { Computer } from '../models/computer.model';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectGroupComponent } from '../dialogs/select-group/select-group.component';
+import { ComputerNameComponent } from '../dialogs/computer-name/computer-name.component';
 
 @Component({
   selector: 'app-computer-card',
@@ -40,6 +41,12 @@ export class ComputerCardComponent implements OnInit, DoCheck {
     this.loadOptions.startVal = this.loadValue;
     this.tempValue = this.computer.tempeture;
     this.loadValue = this.computer.cpuLoad;
+  }
+
+  changeName() {
+    this.dialog.open(ComputerNameComponent, {
+      data: {_id: this.computer._id, name: this.computer.name}
+    })
   }
 
   selectGroup() {

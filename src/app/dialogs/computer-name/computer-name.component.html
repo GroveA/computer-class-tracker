@@ -1,5 +1,5 @@
-<h2 mat-dialog-title>Створити нову групу</h2>
-<form (submit)="onAddGroup(groupForm)" #groupForm="ngForm">
+<h2 mat-dialog-title>Перейменування компютера</h2>
+<form (submit)="onNameSave(cnameForm)" #cnameForm="ngForm">
 <mat-dialog-content class="ofh">
     <mat-form-field>
         <input matInput
@@ -8,7 +8,8 @@
         ngModel
         required
         minlength="3"
-        placeholder="Group Name"
+        placeholder="Computer Name"
+        [(ngModel)]="data.name"
         #name="ngModel">
         <mat-error *ngIf="name.invalid">Введіть правильне ім'я.</mat-error>
     </mat-form-field>
@@ -16,6 +17,6 @@
 
 <mat-dialog-actions>
     <button class="mat-raised-button"(click)="close()">Відмінити</button>
-    <button class="mat-raised-button mat-primary" type="submit" [disabled]="groupForm.invalid">Створити</button>
+    <button class="mat-raised-button mat-primary" type="submit" [disabled]="cnameForm.invalid">Зберегти</button>
 </mat-dialog-actions>
 </form>

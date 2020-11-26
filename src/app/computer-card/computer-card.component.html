@@ -1,6 +1,6 @@
 <mat-card *ngIf="this.computer" >
     <mat-menu #computerMenu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="changeName()">
             <fa-icon [icon]="['far','edit']"></fa-icon>
           <span>Поміняти ім'я комп'ютера</span>
         </button>

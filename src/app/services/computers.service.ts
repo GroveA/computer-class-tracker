@@ -15,7 +15,7 @@ export class ComputersService implements OnInit, OnDestroy {
   private computersUpdated = new Subject<Computer[]>();
   private postUpdater: Subscription;
   constructor(public http: HttpClient) {
-    this.postUpdater = interval(3000)
+    this.postUpdater = interval(1500)
     .pipe(
       startWith(0),
       switchMap(() => this.http.get<Computer[]>(
@@ -45,7 +45,6 @@ export class ComputersService implements OnInit, OnDestroy {
   }
 
   updateComputerGroup(computerID: string, groupID: string) {
-    console.log(groupID);
     this.http
     .post<{message: string}>(`http://localhost:3000/api/computers/${computerID}/group`, { groupId: groupID })
     .subscribe(res => {
@@ -55,11 +54,24 @@ export class ComputersService implements OnInit, OnDestroy {
   }
 
   getComputerById(id: string): Computer {
-    this.computers.forEach(comp => {
-      if (comp._id === id) { return comp; }
+    var indx = this.computers.findIndex(comp => {
+      if (comp._id === id) return true
     });
-    return null;
+    return indx > -1 ? this.computers[indx] : null;
   }
+
+  updateComputerName(id: string, name: string) {
+    if (this.getComputerById(id).name === name) return;
+
+    this.http
+    .post<{message: string}>(`http://localhost:3000/api/computers/${id}/name`, { name: name })
+    .subscribe(res => {
+      this.getComputerById(id).name = name;
+      this.computersUpdated.next(this.computers.slice());
+    });
+
+  }
+
 
   getComputers() {
     return this.computers.slice();

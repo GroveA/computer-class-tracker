@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 import { Group } from '../models/group.model';
 
@@ -10,8 +11,20 @@ export class GroupsService {
   private groups: Group[] = [];
   private groupsUpdated = new Subject<Group[]>();
   private groupSelected = new EventEmitter<Group>();
+  private selectedGroup: Group;
+  private groupChangeSubsription: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastr: ToastrService) {
+
+    this.groupChangeSubsription = this.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; });
+
+  }
+
+
+  getLastSelectedGroup(): Group {
+    return this.selectedGroup
+  }
+
 
   getGroups() {
     this.http
@@ -45,8 +58,15 @@ export class GroupsService {
         group.id = id;
         this.groups.push(group);
         this.groupsUpdated.next(this.groups.slice());
+
+        this.toastr.show("Cтворено нову групу", "", {
+          timeOut: 1000,
+          extendedTimeOut: 0,
+          positionClass: 'toast-bottom-right'
+        }, 'toast-success')
       });
   }
+
 
   deleteGroup(groupId: string) {
     this.http.delete('http://localhost:3000/api/groups/' + groupId)
@@ -54,6 +74,12 @@ export class GroupsService {
         const updatedGroups = this.groups.filter(post => post.id !== groupId);
         this.groups = updatedGroups;
         this.groupsUpdated.next(this.groups.slice());
+        this.groupChangeSubsription.emit(null);
+        this.toastr.show("Успішно видалено групу", "", {
+          timeOut: 1000,
+          extendedTimeOut: 0,
+          positionClass: 'toast-bottom-right'
+        }, 'toast-success')
       });
   }
 

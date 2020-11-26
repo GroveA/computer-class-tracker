@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { ToastrModule } from 'ngx-toastr'
 
 import { ComputerCardComponent } from './computer-card/computer-card.component';
 
@@ -40,6 +41,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ComputerDetailComponent } from './computer-detail/computer-detail.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SelectGroupComponent } from './dialogs/select-group/select-group.component';
+import { ComputerNameComponent } from './dialogs/computer-name/computer-name.component';
 
 const appRoutes: Routes = [
   { path: 'groups/all', component: ComputerListComponent },
@@ -63,12 +65,14 @@ const appRoutes: Routes = [
     GroupPanelComponent,
     CreateGroupComponent,
     PageNotFoundComponent,
-    SelectGroupComponent
+    SelectGroupComponent,
+    ComputerNameComponent
   ],
   imports: [
     RouterModule.forRoot(
       appRoutes
     ),
+    ToastrModule.forRoot(),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,

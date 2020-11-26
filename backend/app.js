@@ -123,6 +123,16 @@ app.post('/api/computers/:id/group', (req, res, next) => {
 
 });
 
+app.post('/api/computers/:id/name', (req, res, next) => {
+  console.log("Computer: Name change req");
+  Computer.findByIdAndUpdate(req.params.id, {$set: {name : req.body.name || "Computer"}})
+  .then((doc) => {
+    res.status(200).json({message: "Succesfully computer name!"});
+  })
+  .catch((err)=> res.status(400).end(err));
+});
+
+
 app.get('/api/computers/:id', (req, res, next) => {
   Indicators.find({computer: new mongoose.Types.ObjectId(req.params.id)})
   .then(allIndi => res.status(200).json(allIndi))
@@ -140,6 +150,12 @@ app.get('/api/computers', (req, res, next) => {
 app.get('/api/groups', (req, res, next) => {
   Group.find({}).then(groups => {
     res.status(200).json({message: "All groups", groups: groups});
+  }).catch(error => res.status(400).end(error));
+});
+
+app.delete('/api/groups/:id', (req, res, next) => {
+  Group.findByIdAndDelete(req.params.id).then( d => {
+    res.status(200).json({ message: "Succesfully deleted group!", id: req.params.id})
   }).catch(error => res.status(400).end(error));
 });
 
