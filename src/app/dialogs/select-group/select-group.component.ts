@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupsService } from 'src/app/services/group.service';
 import { NgForm } from '@angular/forms';
 import { Group } from 'src/app/models/group.model';

@@ -3,7 +3,7 @@ import { GroupsService } from '../services/group.service';
 
 import { Group } from '../models/group.model';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { CreateGroupComponent } from '../dialogs/create-group/create-group.component';
 
 @Component({

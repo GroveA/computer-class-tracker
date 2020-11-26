@@ -151,8 +151,5 @@ app.post('/api/groups', (req, res, next) => {
   .catch(err=> res.status(400).end(err));
 })
 
-app.listen(3000, () => {
-  console.log("Server is lintening on port 3000")
-})
 
 module.exports = app;

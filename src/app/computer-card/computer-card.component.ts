@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { Computer } from '../models/computer.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SelectGroupComponent } from '../dialogs/select-group/select-group.component';
 
 @Component({
