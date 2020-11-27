@@ -7,6 +7,7 @@ import { switchMap, startWith, map } from 'rxjs/operators';
 import { Computer } from '../models/computer.model';
 import { Indicators } from '../models/indicators.model';
 import { Chart } from 'chart.js';
+import { setInterval } from 'timers';
 
 @Component({
   selector: 'app-computer-detail',
@@ -21,6 +22,7 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
   private indicatorsUpdater: Subscription;
   chart = [];
   MATHR = Math.round;
+  now: number;
 
 
 
@@ -29,9 +31,19 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
     const s = this.computersServics.getComputersUpdateListener().subscribe(comps => {
         this.computer = comps.find(c => c._id === this.id);
         s.unsubscribe();
+        this.beginIncatorsUpdate()
       }
     );
 
+
+
+  }
+
+  getDateNow() {
+    return Date.now()
+  }
+
+  beginIncatorsUpdate() {
     this.indicatorsUpdater = interval(2000)
     .pipe(
       startWith(0),
@@ -47,7 +59,7 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
     ).subscribe(res => {
       if (this.indicators.length === 0) {
         this.indicators = res;
-        this.buildChart();
+        // this.buildChart();
       } else {
         const diff = res.length - this.indicators.length;
         this.indicators.push( ...res.slice(res.length - diff));
@@ -56,6 +68,8 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
       const dateDiff = Math.abs(new Date().getTime() - new Date(this.indicators[this.indicators.length - 1 ].date).getTime());
 
       const minuteDiff = Math.floor(dateDiff / 1000 / 60);
+
+      this.now = dateDiff / 1000 ;
 
       if (minuteDiff < 3) {
         this.current = this.indicators[this.indicators.length - 1];
@@ -73,42 +87,42 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
   }
 
   buildChart() {
-    let data1 = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-          {
-              label: 'Активність',
-              backgroundColor: 'rgba(98, 150, 247, 0.2)',
-              borderColor: 'rgba(98, 150, 247, 1)',
-              borderWidth: 2,
-              hoverBackgroundColor: 'rgba(98, 150, 247, 0.4)',
-              hoverBorderColor: 'rgba(98, 150, 247, 1)',
-              data: [0, 0, 1, 5, 7, 3, 0],
-          }
-      ]
-  };
-    const option = {
-    scales: {
-      yAxes: [{
-          stacked: true,
-          gridLines: {
-            display: true,
-            color: 'rgba(255,99,132,0.2)'
-          }
-      }],
-      xAxes: [{
-          gridLines: {
-            display: false
-          }
-      }]
-    }
-  };
+  //   let data1 = {
+  //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  //     datasets: [
+  //         {
+  //             label: 'Активність',
+  //             backgroundColor: 'rgba(98, 150, 247, 0.2)',
+  //             borderColor: 'rgba(98, 150, 247, 1)',
+  //             borderWidth: 2,
+  //             hoverBackgroundColor: 'rgba(98, 150, 247, 0.4)',
+  //             hoverBorderColor: 'rgba(98, 150, 247, 1)',
+  //             data: [0, 0, 1, 5, 7, 3, 0],
+  //         }
+  //     ]
+  // };
+  //   const option = {
+  //   scales: {
+  //     yAxes: [{
+  //         stacked: true,
+  //         gridLines: {
+  //           display: true,
+  //           color: 'rgba(255,99,132,0.2)'
+  //         }
+  //     }],
+  //     xAxes: [{
+  //         gridLines: {
+  //           display: false
+  //         }
+  //     }]
+  //   }
+  // };
 
-    this.chart = new Chart('canvas', {
-    type: 'bar',
-    data: data1,
-    options: option
-  });
+  //   this.chart = new Chart('canvas', {
+  //   type: 'bar',
+  //   data: data1,
+  //   options: option
+  // });
   }
   ngOnDestroy(): void {
     this.indicatorsUpdater.unsubscribe();

@@ -16,7 +16,7 @@ export class GroupsService {
 
   constructor(private http: HttpClient, private toastr: ToastrService) {
 
-    this.groupChangeSubsription = this.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; });
+    this.groupChangeSubsription = this.getGroupSelectedListener().subscribe((group: Group) => { this.selectedGroup = group; });
 
   }
 
@@ -25,6 +25,12 @@ export class GroupsService {
     return this.selectedGroup
   }
 
+  getGroupByName(name: string): Group {
+    var indx = this.groups.findIndex(g => {
+      if (g.name === name) return true
+    });
+    return indx > -1 ? this.groups[indx] : null;
+  }
 
   getGroups() {
     this.http
@@ -42,6 +48,8 @@ export class GroupsService {
       .subscribe(transformedPosts => {
         this.groups = transformedPosts;
         this.groupsUpdated.next(this.groups.slice());
+        console.log(this.selectedGroup)
+        this.groupSelected.emit(this.selectedGroup)
       });
   }
 
@@ -52,9 +60,9 @@ export class GroupsService {
   addGroup(nameg: string) {
     const group: Group = { id: null, name: nameg};
     this.http
-      .post<{ message: string, groupId: string }>('http://localhost:3000/api/groups', group)
+      .post<{ message: string, id: string }>('http://localhost:3000/api/groups', group)
       .subscribe(responseData => {
-        const id = responseData.groupId;
+        const id = responseData.id;
         group.id = id;
         this.groups.push(group);
         this.groupsUpdated.next(this.groups.slice());
@@ -74,7 +82,7 @@ export class GroupsService {
         const updatedGroups = this.groups.filter(post => post.id !== groupId);
         this.groups = updatedGroups;
         this.groupsUpdated.next(this.groups.slice());
-        this.groupChangeSubsription.emit(null);
+        this.groupSelected.emit(null);
         this.toastr.show("Успішно видалено групу", "", {
           timeOut: 1000,
           extendedTimeOut: 0,

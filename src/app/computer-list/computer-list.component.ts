@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Group } from '../models/group.model';
 import { GroupsService } from '../services/group.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-computer-list',
@@ -21,7 +23,7 @@ export class ComputerListComponent implements OnInit, OnDestroy {
   private groupChangeSubsription: Subscription;
 
   constructor(private computersService: ComputersService,
-              private groupsService: GroupsService, private toastr: ToastrService) { }
+              private groupsService: GroupsService, private toastr: ToastrService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.updateSubsription = this.computersService
@@ -29,7 +31,12 @@ export class ComputerListComponent implements OnInit, OnDestroy {
     .subscribe((updatedComputers => this.updateComputerList(updatedComputers)));
     this.groupChangeSubsription = this.groupsService.getGroupSelectedListener().subscribe((group: Group) => {this.selectedGroup = group; });
 
-    this.selectedGroup = this.groupsService.getLastSelectedGroup()
+    const selected = this.route.snapshot.paramMap.get('id');
+
+    this.groupsService.getGroupUpdateListener().pipe(take(1)).subscribe(() => {
+      this.selectedGroup = selected === 'all' ? null: this.groupsService.getGroupByName(selected)
+      this.groupsService.getGroupSelectedListener().emit(this.selectedGroup);
+    })
     this.computers = this.computersService.getComputers()
   }
 
@@ -41,7 +48,7 @@ export class ComputerListComponent implements OnInit, OnDestroy {
   private updateComputerList(updatedList: Computer[]){
     updatedList.forEach((updatedComputer) => {
       this.toastr.show("Получено нові дані", "", {
-        timeOut: 1000,
+        timeOut: 500,
         extendedTimeOut: 0,
         positionClass: 'toast-bottom-right'
       }, 'toast-info')

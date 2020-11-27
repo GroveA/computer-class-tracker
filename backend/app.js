@@ -12,6 +12,7 @@ const Indicators = require('./models/computerIndicators');
 
 
 const Group = require('./models/computerGroup');
+const { Console } = require('console');
 
 
 mongoose
@@ -44,6 +45,14 @@ app.use((req, res, next) => {
   next();
 });
 
+setInterval(() => {
+  Computer.where('lastUpdate').lte(Date.now() - 1000).updateMany({$set: {online : false} })
+  .then(() => {
+    console.log("TASK: STATUS CHECK")
+  })
+  .catch(e => console.log(e));
+
+}, 6000)
 
 app.post('/api/computers', (req, res, next) => {
   Computer.updateOne({ macAddress: req.body.macAddress },
@@ -85,6 +94,7 @@ app.post('/api/computers/:id', (req, res, next) => {
 
   indicators.save().then(savedIndi => {
       Computer.findById(req.params.id).then(computer => {
+        computer.online = true;
         computer.lastUpdate = Date.parse(req.body.date);
         computer.tempeture = req.body.update.CPU.TempetureTotal;
         computer.cpuLoad = req.body.update.CPU.LoadTotal;
@@ -154,6 +164,7 @@ app.get('/api/groups', (req, res, next) => {
 });
 
 app.delete('/api/groups/:id', (req, res, next) => {
+  console.log(req.params.id)
   Group.findByIdAndDelete(req.params.id).then( d => {
     res.status(200).json({ message: "Succesfully deleted group!", id: req.params.id})
   }).catch(error => res.status(400).end(error));

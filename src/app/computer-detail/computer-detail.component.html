@@ -1,11 +1,16 @@
 <div class="col-xs-12 col-sm-12  col-md-12">
   <mat-card *ngIf="this.computer" >
-  <mat-card-header>
+    <mat-card-subtitle style="float: right;">Оновлено: {{ this.now | timeback }} </mat-card-subtitle>
+
+  <mat-card-header >
 
 
-    <mat-card-title><h2>{{ this.computer.name }}</h2></mat-card-title>
+    <mat-card-title ><h2>{{ this.computer.name }}</h2></mat-card-title>
     <mat-card-subtitle>MAC-адрес: {{ this.computer.macAddress }}</mat-card-subtitle>
+
+
   </mat-card-header>
+
   <mat-card-content>
     <div class="row">
         <div class="col-xs-12 col-sm-12  col-md-8 offset-md-2">

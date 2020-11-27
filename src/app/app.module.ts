@@ -42,9 +42,10 @@ import { ComputerDetailComponent } from './computer-detail/computer-detail.compo
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SelectGroupComponent } from './dialogs/select-group/select-group.component';
 import { ComputerNameComponent } from './dialogs/computer-name/computer-name.component';
+import { TimeBackPipe } from './computer-detail/custom.time.pipe';
 
 const appRoutes: Routes = [
-  { path: 'groups/all', component: ComputerListComponent },
+  // { path: 'groups/all', component: ComputerListComponent },
   { path: 'groups/:id', component: ComputerListComponent},
   { path: 'computer/:id',      component: ComputerDetailComponent },
   { path: '',
@@ -57,6 +58,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
+    TimeBackPipe,
     AppComponent,
     AppNavigationComponent,
     ComputerCardComponent,
@@ -66,7 +68,9 @@ const appRoutes: Routes = [
     CreateGroupComponent,
     PageNotFoundComponent,
     SelectGroupComponent,
-    ComputerNameComponent
+    ComputerNameComponent,
+    
+
   ],
   imports: [
     RouterModule.forRoot(
@@ -94,7 +98,7 @@ const appRoutes: Routes = [
     MatChipsModule,
     FontAwesomeModule,
     HttpClientModule,
-    CountUpModule
+    CountUpModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
