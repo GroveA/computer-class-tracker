@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ComputersService } from '../services/computers.service';
 import { ActivatedRoute, } from '@angular/router';
@@ -7,18 +7,42 @@ import { switchMap, startWith, map } from 'rxjs/operators';
 import { Computer } from '../models/computer.model';
 import { Indicators } from '../models/indicators.model';
 import { Chart } from 'chart.js';
-import { setInterval } from 'timers';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-computer-detail',
   templateUrl: './computer-detail.component.html',
-  styleUrls: ['./computer-detail.component.scss']
+  styleUrls: ['./computer-detail.component.scss'],
+  animations: [
+    trigger('animWidth', [
+      state('change', style({
+        width: '*',
+      })),
+      transition('* <=> *', animate('400ms ease-in-out')),
+    ])
+  ]
 })
-export class ComputerDetailComponent implements OnInit, OnDestroy {
+export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
+
+
+  tempOptions = {
+    startVal: 0,
+    suffix: '°C',
+    decimalPlaces: 1
+  };
+
+  loadOptions = {
+    startVal: 0,
+    suffix: '%',
+    decimalPlaces: 1
+  };
+
   id: string;
   computer: Computer;
   indicators: Indicators[] = [];
   current: Indicators = null;
+  prev: Indicators = null;
+  cpuLength: Array<number>;
   private indicatorsUpdater: Subscription;
   chart = [];
   MATHR = Math.round;
@@ -37,6 +61,8 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
 
 
 
+  }
+  ngDoCheck(): void {
   }
 
   getDateNow() {
@@ -72,7 +98,13 @@ export class ComputerDetailComponent implements OnInit, OnDestroy {
       this.now = dateDiff / 1000 ;
 
       if (minuteDiff < 3) {
+        this.prev = this.current;
+
         this.current = this.indicators[this.indicators.length - 1];
+
+        if (!this.cpuLength || this.cpuLength.length !== this.current.CPU.Cores)
+          this.cpuLength = new Array(this.current.CPU.Cores)
+
       } else {
         this.current = null;
         this.computer.online = false;

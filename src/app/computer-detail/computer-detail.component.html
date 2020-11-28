@@ -45,18 +45,53 @@
                   <div class="card" *ngIf="this.current">
                     <div class="card-body">
                       <h4 class="card-title">Температура:</h4>
-                      <div class="progress w-50" *ngFor="let temp of this.current.CPU.Tempeture; let i = index">
-                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="temp+'%'" aria-valuemin="0" aria-valuemax="100">Ядро №{{ i + 1}} : {{ temp }} ℃</div>
+                      <div  *ngFor="let a of this.cpuLength; let i = index;">
+                        Ядро №{{ i + 1}}
+                        <div class="progress w-50">
+
+                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="this.current.CPU.Tempeture[i]+'%'"  aria-valuemin="0" aria-valuemax="100"
+                          >
+                        
+                          <span
+                          [countUp]="this.current.CPU.Tempeture[i]"
+                          [options]="    
+                          {
+                            startVal: this.prev ? this.prev.CPU.Tempeture[i] : 0,
+                            suffix: '°C',
+                            decimalPlaces: 1
+                          }
+                          "
+                          reanimateOnClick="false"
+                          >0</span>
+                        </div>
                        </div>
+                      </div>
+                
                     </div>
                   </div>
 
                   <div class="card" *ngIf="this.current">
                       <div class="card-body">
                         <h4 class="card-title">Навантаження:</h4>
-                        <div class="progress w-50" *ngFor="let load of this.current.CPU.Load; let i = index">
-                            <div class="progress-bar bg-warning" role="progressbar" [style.width]="load+'%'" aria-valuemin="0" aria-valuemax="100">Ядро №{{ i + 1}} : {{ load }}%</div>
+                        <div  *ngFor="let a of this.cpuLength; let i = index;">
+                          Ядро №{{ i + 1}}
+                          <div class="progress w-50">
+                            <div class="progress-bar bg-warning" role="progressbar" [style.width]="this.current.CPU.Load[i]+'%'" aria-valuemin="0" aria-valuemax="100">
+                              <span
+                              [countUp]="this.current.CPU.Load[i]"
+                              [options]="    
+                              {
+                                startVal: this.prev ? this.prev.CPU.Load[i] : 0,
+                                suffix: '%',
+                                decimalPlaces: 1
+                              }
+                              "
+                              reanimateOnClick="false"
+                              >0</span>
+                            </div>
                          </div>
+                        </div>
+                     
                       </div>
                     </div>
 
