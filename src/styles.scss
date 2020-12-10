@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 
 @import '~ngx-toastr/toastr';
 
@@ -12,7 +11,6 @@
 @import "~bootstrap/scss/_progress.scss";
 @import "reset";
 
-// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./theme.scss";
 
 html, body { height: 100%; }

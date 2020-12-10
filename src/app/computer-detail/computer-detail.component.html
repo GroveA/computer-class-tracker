@@ -21,7 +21,7 @@
                   <mat-card-subtitle>Ім'я хосту: {{ this.computer.hostName }}</mat-card-subtitle>
                   <mat-card-subtitle>Материнська плата: {{ this.computer.motherboard }}</mat-card-subtitle>
                   <mat-card-subtitle>MAC-адрес: {{ this.computer.macAddress }}</mat-card-subtitle>
-                  <mat-card-subtitle>Статус підключення: {{ this.computer.online? 'Підключений': 'Відключений' }}</mat-card-subtitle>
+                  <mat-card-subtitle> <span>Статус підключення: </span> <span class="{{ this.computer.online ? 'text-success' : 'text-danger' }}">{{ this.computer.online? 'Підключений': 'Відключений' }}</span></mat-card-subtitle>
                   <mat-card-subtitle>Останнє оновлення показників: {{ this.computer.lastUpdate | date: 'dd/MM/yy HH:mm:ss' }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
@@ -33,23 +33,26 @@
               </mat-card>
         </div>
         <div class="col-xs-12 col-sm-12  col-md-6">
-            <mat-card *ngIf="this.computer.cpuName" >
-                <mat-card-header>
+          <div class="col-xs-12 col-sm-12  col-md-12">
 
+            <mat-card *ngIf="this.computer.cpuName">
+                <mat-card-header>
+                  <div mat-card-avatar class="cpu-icon computer-card-icon"></div>
                   <mat-card-title><h5>Центральний процесор</h5></mat-card-title>
                   <mat-card-subtitle>Модель: {{ this.computer.cpuName }}</mat-card-subtitle>
                   <mat-card-subtitle>Ядер: {{ this.computer.cpuCores }}</mat-card-subtitle>
+                  <mat-card-subtitle>Середня темература: {{ getAverageCPUTemp() | number : '1.1-1'  }}°C</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
 
-                  <div class="card" *ngIf="this.current">
+                  <div class="card" *ngIf="this.current && this.computer.online">
                     <div class="card-body">
                       <h4 class="card-title">Температура:</h4>
                       <div  *ngFor="let a of this.cpuLength; let i = index;">
-                        Ядро №{{ i + 1}}
+                        <span class="mat-small">Ядро №{{ i + 1}}</span>
                         <div class="progress w-50">
 
-                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="this.current.CPU.Tempeture[i]+'%'"  aria-valuemin="0" aria-valuemax="100"
+                          <div class="progress-bar {{ this.current.CPU.Tempeture[i] | progressclass }}" role="progressbar" [style.width]="this.current.CPU.Tempeture[i]+'%'"  aria-valuemin="0" aria-valuemax="100"
                           >
                         
                           <span
@@ -70,13 +73,14 @@
                     </div>
                   </div>
 
-                  <div class="card" *ngIf="this.current">
+                  <div class="card" *ngIf="this.current && this.computer.online">
                       <div class="card-body">
                         <h4 class="card-title">Навантаження:</h4>
                         <div  *ngFor="let a of this.cpuLength; let i = index;">
-                          Ядро №{{ i + 1}}
+                          <span class="mat-small">Ядро №{{ i + 1}}</span>
+
                           <div class="progress w-50">
-                            <div class="progress-bar bg-warning" role="progressbar" [style.width]="this.current.CPU.Load[i]+'%'" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar {{ this.current.CPU.Load[i] | progressclass }}" role="progressbar" [style.width]="this.current.CPU.Load[i]+'%'" aria-valuemin="0" aria-valuemax="100">
                               <span
                               [countUp]="this.current.CPU.Load[i]"
                               [options]="    
@@ -103,22 +107,63 @@
                 </mat-card-content>
 
               </mat-card>
+          </div>
+          <div class="col-xs-12 col-sm-12  col-md-12">
+            <mat-card *ngIf="this.computer.hddLoad" >
+              <mat-card-header>
+                <div mat-card-avatar class="hdd-icon computer-card-icon"></div>
+                <mat-card-title><h5>HDD</h5></mat-card-title>
+                <mat-card-subtitle>Завантаженість: {{ this.computer.hddLoad | number : '1.1-1' }}%</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                  <div class="card" *ngIf="this.current && this.current.HDD && this.computer.online">
+                      <div class="card-body">
+                        <h4 class="card-title">Температура:</h4>
+                          <div class="progress">
+  
+                            <div class="progress-bar {{ this.current.HDD.Tempeture | progressclass }}" role="progressbar" [style.width]="this.current.HDD.Tempeture+ '%'"  aria-valuemin="0" aria-valuemax="100"
+                            >
+                          
+                            <span
+                            [countUp]="this.current.HDD.Tempeture "
+                            [options]="    
+                            {
+                              startVal: this.prev ? this.prev.HDD.Tempeture  : 0,
+                              suffix: '°C',
+                              decimalPlaces: 1
+                            }
+                            "
+                            reanimateOnClick="false"
+                            >0</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+  
+              </mat-card-content>
+  
+            </mat-card>
+          </div>
         </div>
         <div class="col-xs-12 col-sm-12  col-md-6">
+          <div class="col-xs-12 col-sm-12  col-md-12">
             <mat-card *ngIf="this.computer.gpuName" >
                 <mat-card-header>
-
+                  <div mat-card-avatar class="gpu-icon computer-card-icon"></div>
                   <mat-card-title><h5>Графічний процесор</h5></mat-card-title>
                   <mat-card-subtitle>Модель: {{ this.computer.gpuName }}</mat-card-subtitle>
                   <mat-card-subtitle>Відеопам'ять: 2 GB</mat-card-subtitle>
+                  <mat-card-subtitle>Середня темература: {{ getAverageGPUTemp() | number : '1.1-1'  }}°C</mat-card-subtitle>
+               
                 </mat-card-header>
                 <mat-card-content>
 
-                <div class="card" *ngIf="this.current">
+                <div class="card" *ngIf="this.current && this.computer.online">
                     <div class="card-body">
                       <h4 class="card-title">Температура:</h4>
                       <div class="progress w-50">
-                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="this.current.GPU.Tempeture+'%'" aria-valuemin="0" aria-valuemax="100">{{ this.current.GPU.Tempeture }} ℃</div>
+                          <div class="progress-bar {{ this.current.GPU.Tempeture | progressclass }}" role="progressbar" [style.width]="this.current.GPU.Tempeture+'%'" aria-valuemin="0" aria-valuemax="100">{{ this.current.GPU.Tempeture }} ℃</div>
                         </div>
                     </div>
                   </div>
@@ -128,29 +173,35 @@
 
               </mat-card>
         </div>
-        <div class="col-xs-12 col-sm-12  col-md-6">
-            <mat-card *ngIf="this.computer.cpuName" >
-                <mat-card-header>
-                  <mat-card-title><h5>Оперативна пам'ять</h5></mat-card-title>
-                  <mat-card-subtitle>Вмісткість: {{ this.computer.ram }} GB</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="card" *ngIf="this.current">
-                        <div class="card-body">
-                          <h4 class="card-title">Пам'ять:</h4>
-                          <div class="progress">
-                              <div class="progress-bar bg-success" [style.width]="getRAM(false)+'%'" role="progressbar"  aria-valuemin="0" aria-valuemax="100">Вільно: {{ this.current.RAM.AvaliableMemory | number }} GB</div>
-                              <div class="progress-bar bg-danger" role="progressbar" [style.width]="getRAM(true)+'%'"  aria-valuemin="0" aria-valuemax="100">Використано: {{  this.current.RAM.UsedMemory | number }} GB</div>
-                            </div>
-                        </div>
-                      </div>
-
-
-                </mat-card-content>
-
-              </mat-card>
-        </div>
         <div class="col-xs-12 col-sm-12  col-md-12">
+          <mat-card *ngIf="this.computer.cpuName" >
+            <mat-card-header>
+              <div mat-card-avatar class="ram-icon computer-card-icon"></div>
+              <mat-card-title><h5>Оперативна пам'ять</h5></mat-card-title>
+              <mat-card-subtitle>Об'єм: {{ this.computer.ram }} GB</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="card" *ngIf="this.current && this.computer.online">
+                    <div class="card-body">
+                      <h4 class="card-title">Пам'ять:</h4>
+                      <div class="progress">
+                          <div class="progress-bar bg-success" [style.width]="getRAM(false)+'%'" role="progressbar"  aria-valuemin="0" aria-valuemax="100"><span class="span-offset">{{ this.current.RAM.AvaliableMemory | number: '.1-2' }} GB</span></div>
+                          <div class="progress-bar bg-danger" role="progressbar" [style.width]="getRAM(true)+'%'"  aria-valuemin="0" aria-valuemax="100"><span class="span-offset">{{  this.current.RAM.UsedMemory | number:'.1-2' }} GB</span></div>
+                        </div>
+                    </div>
+                  </div>
+
+
+            </mat-card-content>
+
+          </mat-card>
+        </div>
+        
+        </div>
+        <div class="col-xs-12 col-sm-12  col-md-6">
+    
+        </div>
+        <!-- <div class="col-xs-12 col-sm-12  col-md-12">
             <mat-card *ngIf="this.computer.cpuName" >
                 <mat-card-header>
                   <mat-card-title><h5>Графік активності</h5></mat-card-title>
@@ -165,16 +216,23 @@
                 </mat-card-content>
 
               </mat-card>
-        </div>
+        </div> -->
     </div>
-
-
-
 
   </mat-card-content>
   <mat-card-actions >
 
   </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="this.lastScreen && this.computer">
+  <mat-card-header>
+    <mat-card-title>Oстанній знімок екрану</mat-card-title>
+    <mat-card-subtitle>{{ this.lastScreen.date | date: 'dd/MM/yy HH:mm:ss' }}</mat-card-subtitle>
+    <button class="scr-all mat-raised-button" [routerLink]="['/screenshots', this.id]" color="primary">Переглянути всі</button>
+
+  </mat-card-header>
+  <img class="mat-card-image scr-img" [src]="this.getLastSHURL()" alt="Deleted :(" >
 </mat-card>
 </div>
 

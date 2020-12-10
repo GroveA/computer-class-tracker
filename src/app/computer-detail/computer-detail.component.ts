@@ -8,6 +8,8 @@ import { Computer } from '../models/computer.model';
 import { Indicators } from '../models/indicators.model';
 import { Chart } from 'chart.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ScreenShot } from '../models/screenshot.model';
+import { ScreenShotService } from '../services/screenshot.service';
 
 @Component({
   selector: 'app-computer-detail',
@@ -47,10 +49,15 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
   chart = [];
   MATHR = Math.round;
   now: number;
+  screenshotUpdater: Subscription;
+  lastScreen: ScreenShot;
+  shSub: Subscription;
 
 
+  constructor(private http: HttpClient, private computersServics: ComputersService, private route: ActivatedRoute, private screenShotService: ScreenShotService) {
 
-  constructor(private http: HttpClient, private computersServics: ComputersService, private route: ActivatedRoute) {
+    
+
     this.id = this.route.snapshot.paramMap.get('id');
     const s = this.computersServics.getComputersUpdateListener().subscribe(comps => {
         this.computer = comps.find(c => c._id === this.id);
@@ -58,6 +65,11 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
         this.beginIncatorsUpdate()
       }
     );
+    this.lastScreen = screenShotService.getByComputerLast(this.id);
+
+    this.shSub = screenShotService.getUpdateListener().subscribe(() => {
+      this.lastScreen = screenShotService.getByComputerLast(this.id);
+    })
 
 
 
@@ -74,7 +86,7 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
     .pipe(
       startWith(0),
       switchMap(() => this.http.get<Indicators[]>(
-        'http://localhost:3000/api/computers/' + this.id
+        'http://localhost:3000/api/computers/' + this.id + "&" + this.indicators.length, 
         ).pipe(map((computerData) => {
           return computerData.map(comp => {
             comp.computerId = comp.computer;
@@ -83,12 +95,14 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
         })),
         )
     ).subscribe(res => {
+      console.log(res);
       if (this.indicators.length === 0) {
         this.indicators = res;
+
+
         // this.buildChart();
       } else {
-        const diff = res.length - this.indicators.length;
-        this.indicators.push( ...res.slice(res.length - diff));
+        this.indicators.push( ...res);
       }
 
       const dateDiff = Math.abs(new Date().getTime() - new Date(this.indicators[this.indicators.length - 1 ].date).getTime());
@@ -97,7 +111,7 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
 
       this.now = dateDiff / 1000 ;
 
-      if (minuteDiff < 3) {
+      if (minuteDiff < 10) {
         this.prev = this.current;
 
         this.current = this.indicators[this.indicators.length - 1];
@@ -110,11 +124,55 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
         this.computer.online = false;
       }
       this.computer.lastUpdate = this.indicators[this.indicators.length - 1].date;
+        
+      // this.computer.online = Math.abs(new Date().getTime() - new Date(this.computer.lastUpdate).getTime()) / 1000 > 10 ? false : true
+
 
     });
   }
 
+  beginScreenShotsUpdate() {
+    this.screenshotUpdater = interval(10000)
+    .pipe(
+      startWith(0),
+      switchMap(() => this.http.get<ScreenShot[]>(
+        'http://localhost:3000/api/computers/' + this.id + "/screenshot", 
+        ))
+    ).subscribe(res => {
+      console.log(res)
+    });
+  }
+
+  getAverageCPUTemp() {
+    var avg = 0;
+    this.indicators.forEach(i => {
+      var temp = 0;
+      i.CPU.Tempeture.forEach(t => temp += t);
+      avg += temp / i.CPU.Tempeture.length;
+    })
+
+    avg /= this.indicators.length;
+
+    return avg;
+  }
+  getAverageGPUTemp() {
+    var avg = 0;
+    this.indicators.forEach(i => {
+      i.GPU && (avg += i.GPU.Tempeture)
+    })
+
+    avg /= this.indicators.length;
+
+    return avg;
+  }
+
   ngOnInit() {
+
+  }
+
+  getLastSHURL() {
+
+    return this.lastScreen ? "http://localhost:3000/computers/" + this.lastScreen.computer + '/' + this.lastScreen.name + '.png': "";
 
   }
 
@@ -157,7 +215,9 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
   // });
   }
   ngOnDestroy(): void {
-    this.indicatorsUpdater.unsubscribe();
+    this.indicatorsUpdater && this.indicatorsUpdater.unsubscribe();
+    this.screenshotUpdater && this.screenshotUpdater.unsubscribe();
+    this.shSub.unsubscribe()
   }
 
 

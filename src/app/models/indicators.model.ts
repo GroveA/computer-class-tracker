@@ -8,12 +8,17 @@ export interface Indicators {
     Load: [number],
     Tempeture: [number],
     Cores: number
-  };
+  },
   GPU: {
-    Tempeture: number
-  };
+    Tempeture: number,
+    Load: number,
+  },
   RAM: {
     UsedMemory: number,
     AvaliableMemory: number,
-  };
+  },
+  HDD: {
+    Tempeture: number,
+    Load: number,
+  },
 }

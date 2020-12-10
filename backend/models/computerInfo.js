@@ -14,6 +14,7 @@ const computerInfoSchema = new Schema({
   lastUpdate: Date,
   cpuLoad: Number,
   tempeture: Number,
+  hddLoad: Number,
   group: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Group'

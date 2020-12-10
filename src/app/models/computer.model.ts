@@ -15,4 +15,5 @@ export interface Computer {
   tempeture: number;
   groupId: string;
   group: string;
+  hddLoad: number;
 }

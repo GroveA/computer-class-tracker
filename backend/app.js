@@ -4,7 +4,11 @@ const bodyParser = require("body-parser");
 
 const mongoose = require("mongoose");
 
+const fs = require("fs-extra");
+
 const app = express();
+
+const fileUpload = require('express-fileupload');
 
 const Computer = require('./models/computerInfo');
 
@@ -12,7 +16,8 @@ const Indicators = require('./models/computerIndicators');
 
 
 const Group = require('./models/computerGroup');
-const { Console } = require('console');
+
+const ScreenShotModel = require('./models/screenShot');
 
 
 mongoose
@@ -21,6 +26,21 @@ mongoose
     { useNewUrlParser: true }
   )
   .then(() => {
+    Indicators.countDocuments().then((c) => {
+      if (c > 10000) Indicators.deleteMany({}).then(() => console.log("Clear data"))
+    })
+    ScreenShotModel.find({}).then((screens) => {
+      screens.forEach(screen => {
+
+        var path = './static/computers/' + screen.computer + '/' + screen.name + '.png';
+
+        if (!screen.computer || !screen.date || !fs.existsSync(path)) {
+          ScreenShotModel.deleteOne(screen).then(() => console.log("S"));
+          fs.remove(path).then((s) => {}).catch(e=> console.log(e));
+        }
+      })
+    })
+
     console.log("Connected to database!");
   })
   .catch(() => {
@@ -29,6 +49,12 @@ mongoose
 
 
 mongoose.set('useFindAndModify', false);
+app.use(express.static('static'));
+app.use(
+  fileUpload({
+    createParentPath: true
+  })
+)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -52,7 +78,7 @@ setInterval(() => {
   })
   .catch(e => console.log(e));
 
-}, 6000)
+}, 15000)
 
 app.post('/api/computers', (req, res, next) => {
   Computer.updateOne({ macAddress: req.body.macAddress },
@@ -78,7 +104,64 @@ app.post('/api/computers', (req, res, next) => {
 
 });
 
+app.post('/api/computers/:id/screenshot', (req, res, next) => {
+  
+  if (req.files && req.files.screen) {
+
+    var screenShot = req.files.screen;
+
+    var jbody = JSON.parse(req.body['application/json']);
+
+    var screenShotInst = new ScreenShotModel();
+
+    screenShotInst.computer = new mongoose.Types.ObjectId(req.params.id);
+    screenShotInst.date = Date.parse(jbody.date);
+    screenShotInst.active = jbody.active;
+    screenShotInst.proccess = jbody.proccess;
+    screenShotInst.name = screenShot.name;
+
+    fs.ensureDir('./static/computers/' + req.params.id).then(() => {
+
+      screenShot.mv('./static/computers/' + req.params.id + '/' + screenShot.name + '.png', () => {});
+      screenShotInst.save().then(save => {
+        res.status(200).json({ message: 'Recieved screenshot succesfully for id - ' + req.params.id });
+      })
+    })
+
+  } else {
+    res.status(400).end("#$$@1312$%");
+  }
+
+})
+
+app.get('/api/computers/:id/screenshot', (req, res, next) => {
+  
+  
+  Computer.findById(req.params.id).then(computer => {
+    ScreenShotModel.find({computer: new mongoose.Types.ObjectId(req.params.id)}).then(screens => {
+      res.status(200).json(screens);
+    }).catch(error => {
+      res.status(400).end("Computer with your id not found :|");
+    })
+
+  }).catch(error => {
+    res.status(400).end("Computer with your id not found :|");
+  })
+
+})
+app.get('/api/computers/screenshot', (req, res, next) => {
+  
+  ScreenShotModel.find({}).then(screens => {
+    res.status(200).json(screens);
+  }).catch(error => {
+    res.status(400).end("#@$!$");
+  })
+
+
+})
+
 app.post('/api/computers/:id', (req, res, next) => {
+  console.log("New indicators")
   var indicators = new Indicators();
   indicators.date = Date.parse(req.body.date);
   indicators.computer = new mongoose.Types.ObjectId(req.params.id);
@@ -89,8 +172,15 @@ app.post('/api/computers/:id', (req, res, next) => {
   indicators.CPU.Cores = req.body.update.CPU.Cores;
   indicators.CPU.Cores = req.body.update.CPU.Cores;
   indicators.GPU.Tempeture = req.body.update.GPU.Tempeture;
+
+  const { FreeMemory: GMemFree, UsedMemory: GMemUsed } = req.body.update.GPU;
+  indicators.GPU.Load = GMemUsed / (GMemFree + GMemUsed);
+
   indicators.RAM.UsedMemory = req.body.update.RAM.UsedMemory;
   indicators.RAM.AvaliableMemory = req.body.update.RAM.AvaliableMemory;
+
+  indicators.HDD.Tempeture = req.body.update.HDD.Tempeture;
+  indicators.HDD.UsedSpace = req.body.update.HDD.UsedSpace;
 
   indicators.save().then(savedIndi => {
       Computer.findById(req.params.id).then(computer => {
@@ -98,6 +188,9 @@ app.post('/api/computers/:id', (req, res, next) => {
         computer.lastUpdate = Date.parse(req.body.date);
         computer.tempeture = req.body.update.CPU.TempetureTotal;
         computer.cpuLoad = req.body.update.CPU.LoadTotal;
+        computer.hddLoad = req.body.update.HDD.UsedSpace;
+
+
         computer.save().then(save => res.status(200).json({ message: 'Recieved update succesfully for id - ' + req.params.id }));
       }).catch(error => {
         res.status(400).end("Computer with your id not found :|");
@@ -123,7 +216,6 @@ app.post('/api/computers/:id/offline', (req, res, next) => {
 });
 
 app.post('/api/computers/:id/group', (req, res, next) => {
-  console.log(req.body.groupId);
   Computer.findByIdAndUpdate(req.params.id, {$set: {group : req.body.groupId}})
   .then((doc) => {
     console.log(doc);
@@ -134,7 +226,6 @@ app.post('/api/computers/:id/group', (req, res, next) => {
 });
 
 app.post('/api/computers/:id/name', (req, res, next) => {
-  console.log("Computer: Name change req");
   Computer.findByIdAndUpdate(req.params.id, {$set: {name : req.body.name || "Computer"}})
   .then((doc) => {
     res.status(200).json({message: "Succesfully computer name!"});
@@ -142,10 +233,11 @@ app.post('/api/computers/:id/name', (req, res, next) => {
   .catch((err)=> res.status(400).end(err));
 });
 
+var max_indicators = 1000;
 
-app.get('/api/computers/:id', (req, res, next) => {
-  Indicators.find({computer: new mongoose.Types.ObjectId(req.params.id)})
-  .then(allIndi => res.status(200).json(allIndi))
+app.get('/api/computers/:id&:skip', (req, res, next) => {
+  Indicators.find({computer: new mongoose.Types.ObjectId(req.params.id)}).sort({date: 1}).skip(req.params.skip)
+  .then(allIndi => { res.status(200).json(allIndi)})
   .catch(err => res.status(400).end(err));
 });
 

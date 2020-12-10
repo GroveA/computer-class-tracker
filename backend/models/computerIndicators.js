@@ -12,7 +12,12 @@ const computerInfoSchema = new Schema({
     Cores: Number
   },
   GPU: {
-    Tempeture: Number
+    Tempeture: Number,
+    Load: Number,
+  },
+  HDD: {
+    Tempeture: Number,
+    UsedSpace: Number,
   },
   RAM: {
     UsedMemory: Number,

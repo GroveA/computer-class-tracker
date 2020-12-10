@@ -43,11 +43,17 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SelectGroupComponent } from './dialogs/select-group/select-group.component';
 import { ComputerNameComponent } from './dialogs/computer-name/computer-name.component';
 import { TimeBackPipe } from './computer-detail/custom.time.pipe';
+import { ProgressClassPipe } from './computer-detail/progress.class.pipe';
+import { ScreenshotViewComponent } from './screenshot-view/screenshot-view.component';
+import { ScreenshotDialogComponent } from './screenshot-dialog/screenshot-dialog.component';
+import { AboutComponent } from './about/about.component';
 
 const appRoutes: Routes = [
   // { path: 'groups/all', component: ComputerListComponent },
+  { path: 'about', component: AboutComponent},
   { path: 'groups/:id', component: ComputerListComponent},
   { path: 'computer/:id',      component: ComputerDetailComponent },
+  { path: 'screenshots/:id',      component: ScreenshotViewComponent },
   { path: '',
     redirectTo: '/groups/all',
     pathMatch: 'full'
@@ -69,7 +75,10 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     SelectGroupComponent,
     ComputerNameComponent,
-    
+    ProgressClassPipe,
+    ScreenshotViewComponent,
+    ScreenshotDialogComponent,
+    AboutComponent
 
   ],
   imports: [

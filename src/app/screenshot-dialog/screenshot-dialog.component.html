@@ -1,0 +1,15 @@
+<h3 >Дата: {{ screenshot.date | date: 'dd/MM/yy HH:mm:ss' }}</h3>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8" style="max-height: 600px; overflow: scroll;">
+        <img [src]="this.getScreenURL()"  alt="Deleted :(">
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-4" style="max-height: 600px; overflow-y: scroll;">
+        <h4>Активне вікно: {{ screenshot.active }} </h4>
+        <h4>Список активних процесів</h4>
+        <mat-list role="list" >
+            <mat-list-item role="listitem" *ngFor="let p of screenshot.proccess">{{ p }}</mat-list-item>
+ 
+        </mat-list>
+    </div>
+</div>

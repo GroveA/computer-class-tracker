@@ -19,6 +19,14 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>Моніторинг комп'ютерного класу</span>
+
+      <span class="spacer"></span>
+      <button class='tb-btn' mat-fab color="primary" [routerLink]="['/about']">
+        <mat-icon >info</mat-icon>
+      </button>
+      <a  target="_blank" href="/assets/client.zip"> <button class='tb-btn' mat-fab color="primary">
+        <mat-icon>download</mat-icon>
+      </button></a>
     </mat-toolbar>
     <ng-content select="[main]"></ng-content>
   </mat-sidenav-content>
