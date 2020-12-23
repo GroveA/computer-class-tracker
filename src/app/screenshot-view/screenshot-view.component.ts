@@ -52,13 +52,18 @@ export class ScreenshotViewComponent implements OnInit, OnDestroy {
       var key = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear();
       if (this.mappedScreens[key]) {
         this.mappedScreens[key].unshift(screen);
+
+        this.mappedScreens[key].sort((a, b) => Date.parse(a.date) - Date.parse(b.date)).reverse();
+
       } else {
         this.orderScreens.push(dateNum);
         this.mappedScreens[key] = [screen]
       }
     })
 
-    this.orderScreens.sort((a,b) =>  a > b ? a : b).reverse();
+    this.orderScreens.sort((a,b) =>  a - b).reverse();
+
+    console.log(this.orderScreens)
    }
 
   getScreenURL(screenshot: ScreenShot) {

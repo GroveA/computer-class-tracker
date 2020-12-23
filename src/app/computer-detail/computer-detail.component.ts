@@ -125,7 +125,7 @@ export class ComputerDetailComponent implements OnInit, OnDestroy, DoCheck {
       }
       this.computer.lastUpdate = this.indicators[this.indicators.length - 1].date;
         
-      // this.computer.online = Math.abs(new Date().getTime() - new Date(this.computer.lastUpdate).getTime()) / 1000 > 10 ? false : true
+      this.computer.online = Math.abs(new Date().getTime() - new Date(this.computer.lastUpdate).getTime()) / 1000 > 10 ? false : true
 
 
     });

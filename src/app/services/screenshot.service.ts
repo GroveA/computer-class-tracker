@@ -18,7 +18,7 @@ export class ScreenShotService {
   constructor(private http: HttpClient) {
 
 
-    this.screenshotUpdater = interval(10000)
+    this.screenshotUpdater = interval(2000)
     .pipe(
       startWith(0),
       switchMap(() => this.http.get<ScreenShot[]>(

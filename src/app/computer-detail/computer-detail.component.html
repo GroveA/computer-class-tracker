@@ -232,7 +232,10 @@
     <button class="scr-all mat-raised-button" [routerLink]="['/screenshots', this.id]" color="primary">Переглянути всі</button>
 
   </mat-card-header>
-  <img class="mat-card-image scr-img" [src]="this.getLastSHURL()" alt="Deleted :(" >
+  <div class="d-flex justify-content-center">
+    <img class="mat-card-image scr-img w-50" style="margin: auto 0;" [src]="this.getLastSHURL()" alt="Deleted :(" >
+
+  </div>
 </mat-card>
 </div>
 
